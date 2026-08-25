@@ -1,0 +1,74 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <img src="MARQUISE-AMBIENTAL.jpg" alt="Marquise Ambiental" class="brand-logo" />
+    <div class="header-titles">
+      <h1>Turnover & Retenção de RH</h1>
+      <p>Base novoturnover.xlsx — coleta urbana / gestão de resíduos</p>
+    </div>
+    <app-dashboard-nav class="header-nav" />
+  </header>
+
+  @if (loading()) {
+    <div class="dashboard-state">Carregando base de dados…</div>
+  } @else if (error()) {
+    <div class="dashboard-state dashboard-state--error">{{ error() }}</div>
+  } @else if (!hasRecords()) {
+    <div class="dashboard-state">Nenhum dado carregado.</div>
+  } @else {
+    <section class="kpi-row">
+      <app-kpi-card
+        label="Colaboradores ativos"
+        [value]="(kpis().totalActive | number) ?? '0'"
+        hint="de {{ kpis().totalEmployees }} na base"
+      />
+      <app-kpi-card
+        label="Total de desligados"
+        [value]="(kpis().totalDismissed | number) ?? '0'"
+        tone="critical"
+      />
+      <app-kpi-card
+        label="Turnover global"
+        [value]="kpis().overallTurnoverRate.toFixed(2) + '%'"
+        tone="critical"
+      />
+      <app-kpi-card
+        label="Idade média dos desligados"
+        [value]="kpis().avgAgeDismissed.toFixed(1) + ' anos'"
+      />
+      <app-kpi-card
+        label="Permanência média"
+        [value]="kpis().avgTenureDays.toFixed(0) + ' dias'"
+        hint="~1,6 ano"
+      />
+      <app-kpi-card
+        label="Mediana de permanência"
+        [value]="kpis().medianTenureDays.toFixed(0) + ' dias'"
+      />
+      <app-kpi-card
+        label="Desligados em até 90 dias"
+        [value]="kpis().dismissedUnder90DaysPct.toFixed(1) + '%'"
+        tone="warning"
+      />
+      <app-kpi-card
+        label="Término de contrato (T)"
+        [value]="kpis().contractTerminationPct.toFixed(1) + '%'"
+        hint="do total de desligados"
+      />
+    </section>
+
+    <app-filters-bar />
+
+    <section class="chart-grid">
+      <app-age-group-chart />
+      <app-shift-chart />
+      <app-dismissal-reason-chart />
+      <app-top-roles-chart />
+      <app-top-units-chart />
+      <app-marital-status-chart />
+      <app-contract-termination-chart />
+      <app-tenure-curve-chart />
+      <app-education-chart />
+      <app-diagnosis-panel />
+    </section>
+  }
+</div>

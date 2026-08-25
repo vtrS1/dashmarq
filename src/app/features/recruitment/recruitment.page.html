@@ -1,0 +1,43 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <img src="MARQUISE-AMBIENTAL.jpg" alt="Marquise Ambiental" class="brand-logo" />
+    <div class="header-titles">
+      <h1>Recrutamento & Seleção</h1>
+      <p>Base VAGAS-2026.xlsx — abertura, fechamento e SLA de vagas</p>
+    </div>
+    <app-dashboard-nav class="header-nav" />
+  </header>
+
+  @if (loading()) {
+    <div class="dashboard-state">Carregando base de dados…</div>
+  } @else if (error()) {
+    <div class="dashboard-state dashboard-state--error">{{ error() }}</div>
+  } @else if (!hasRecords()) {
+    <div class="dashboard-state">Nenhum dado carregado.</div>
+  } @else {
+    <section class="kpi-row">
+      <app-kpi-card label="Vagas abertas" [value]="(kpis().totalAbertas | number) ?? '0'" />
+      <app-kpi-card label="Vagas fechadas" [value]="(kpis().totalFechadas | number) ?? '0'" />
+      <app-kpi-card label="Pessoas contratadas" [value]="(kpis().totalContratadosExterno | number) ?? '0'" tone="good" />
+      <app-kpi-card label="% dentro do SLA" [value]="kpis().pctDentroSLA.toFixed(1) + '%'" tone="good" />
+      <app-kpi-card label="% fora do SLA" [value]="kpis().pctForaSLA.toFixed(1) + '%'" tone="critical" />
+      <app-kpi-card label="Tempo médio de fechamento" [value]="kpis().tempoMedioFechamentoDiasUteis.toFixed(1) + ' dias úteis'" />
+      <app-kpi-card
+        label="Abertas acima do SLA"
+        [value]="(kpis().vagasAbertasAcimaSLA | number) ?? '0'"
+        tone="critical"
+        hint="de {{ kpis().totalAbertas }} em aberto"
+      />
+    </section>
+
+    <app-recruitment-filters-bar />
+
+    <section class="chart-grid">
+      <app-monthly-vagas-chart />
+      <app-sla-trend-chart />
+      <app-tipo-vaga-table />
+      <app-open-vagas-table />
+      <app-diagnosis-recruitment />
+    </section>
+  }
+</div>

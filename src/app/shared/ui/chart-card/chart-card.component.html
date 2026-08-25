@@ -1,0 +1,11 @@
+<div class="chart-card" [attr.data-span]="span()">
+  <header class="chart-card-header">
+    <h3>{{ title() }}</h3>
+    @if (subtitle()) {
+      <p>{{ subtitle() }}</p>
+    }
+  </header>
+  <div class="chart-card-body">
+    <ng-content />
+  </div>
+</div>

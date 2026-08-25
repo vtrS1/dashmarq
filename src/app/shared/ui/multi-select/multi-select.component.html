@@ -1,0 +1,34 @@
+<div class="multi-select">
+  <span class="ms-label">{{ label() }}</span>
+  <button type="button" class="ms-trigger" (click)="toggleOpen()" [class.active]="open()">
+    <span>{{ summary() }}</span>
+    <svg width="12" height="12" viewBox="0 -960 960 960" fill="currentColor">
+      <path d="M480-360 280-560h400L480-360Z" />
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div class="ms-panel">
+      <input
+        class="ms-search"
+        type="text"
+        placeholder="Buscar…"
+        [value]="query()"
+        (input)="query.set($any($event.target).value)"
+      />
+      <div class="ms-options">
+        @for (opt of filteredOptions(); track opt) {
+          <label class="ms-option">
+            <input type="checkbox" [checked]="isSelected(opt)" (change)="toggle(opt)" />
+            <span>{{ opt }}</span>
+          </label>
+        } @empty {
+          <div class="ms-empty">Nenhum resultado</div>
+        }
+      </div>
+      @if (selected().length) {
+        <button type="button" class="ms-clear" (click)="clear()">Limpar seleção</button>
+      }
+    </div>
+  }
+</div>

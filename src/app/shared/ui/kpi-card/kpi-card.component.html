@@ -1,0 +1,7 @@
+<div class="kpi-card" [attr.data-tone]="tone()">
+  <span class="kpi-label">{{ label() }}</span>
+  <span class="kpi-value">{{ value() }}</span>
+  @if (hint()) {
+    <span class="kpi-hint">{{ hint() }}</span>
+  }
+</div>

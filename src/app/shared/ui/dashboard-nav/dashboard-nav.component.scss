@@ -1,0 +1,27 @@
+.dash-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.2rem 0.1rem;
+    border-bottom: 1.5px solid transparent;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &.active {
+      color: var(--text-primary);
+      font-weight: 600;
+      border-bottom-color: var(--series-1);
+    }
+  }
+}
+
+.dash-nav-sep {
+  color: var(--gridline);
+}

@@ -1,0 +1,15 @@
+<div class="chip-group">
+  <span class="chip-group-label">{{ label() }}</span>
+  <div class="chip-row">
+    @for (opt of options(); track opt.value) {
+      <button
+        type="button"
+        class="chip"
+        [class.selected]="isSelected(opt.value)"
+        (click)="toggle(opt.value)"
+      >
+        {{ opt.label }}
+      </button>
+    }
+  </div>
+</div>

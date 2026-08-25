@@ -1,1 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
+
+/*
+ * Brand palette — Marquise Ambiental (public/MARQUISE-AMBIENTAL.jpg).
+ * Fundo branco fixo (não segue dark mode do sistema) para manter a
+ * identidade visual da marca. Verde/laranja extraídos do logo.
+ */
+:root {
+  color-scheme: light;
+
+  /* Chart / UI surfaces */
+  --surface-1: #ffffff;
+  --surface-page: #ffffff;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e6e6e4;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+
+  /* Categorical series (fixed order — never cycled). Slots 1–2 são as
+     cores do logo (verde/laranja); 3–5 completam a paleta para o donut
+     de motivos de desligamento. */
+  --series-1: #00b454; /* verde da marca */
+  --series-2: #fc5418; /* laranja da marca */
+  --series-3: #2a78d6; /* azul */
+  --series-4: #4a3aa7; /* violeta */
+  --series-5: #8c887e; /* cinza neutro — categoria "Outros" */
+
+  /* Status palette — reaproveita as cores da marca: verde = retenção,
+     laranja = perda/atenção. */
+  --status-good: #00b454;
+  --status-warning: #eda100;
+  --status-serious: #ec835a;
+  --status-critical: #fc5418;
+
+  --success-text: #00893f;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

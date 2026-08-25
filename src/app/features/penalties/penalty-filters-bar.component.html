@@ -1,0 +1,57 @@
+<div class="filters-bar">
+  <div class="filters-row">
+    <app-chip-toggle-group
+      label="Turno"
+      [options]="turnoOptions()"
+      [selected]="filters().turnos"
+      (selectionChange)="onTurnoChange($event)"
+    />
+    <app-chip-toggle-group
+      label="Tipo de penalidade"
+      [options]="tipoOptions()"
+      [selected]="filters().tipos"
+      (selectionChange)="onTipoChange($event)"
+    />
+  </div>
+
+  <div class="filters-row">
+    <app-multi-select
+      label="Função"
+      [options]="availableFuncoes()"
+      [selected]="filters().funcoes"
+      (selectionChange)="onFuncaoChange($event)"
+    />
+    <app-multi-select
+      label="Setor"
+      [options]="availableSetores()"
+      [selected]="filters().setores"
+      (selectionChange)="onSetorChange($event)"
+    />
+    <app-multi-select
+      label="Gestor"
+      [options]="availableGestores()"
+      [selected]="filters().gestores"
+      (selectionChange)="onGestorChange($event)"
+    />
+    <app-multi-select
+      label="Motivo"
+      [options]="availableMotivos()"
+      [selected]="filters().motivos"
+      (selectionChange)="onMotivoChange($event)"
+    />
+    <app-date-range-filter
+      label="Período"
+      [range]="filters().dateRange"
+      [min]="dateBounds()?.[0] ?? null"
+      [max]="dateBounds()?.[1] ?? null"
+      (rangeChange)="onDateRangeChange($event)"
+    />
+
+    <div class="filters-meta">
+      <span class="result-count">{{ resultCount().length | number }} penalidade(s) no filtro</span>
+      @if (hasActiveFilters()) {
+        <button type="button" class="reset-btn" (click)="reset()">Limpar filtros</button>
+      }
+    </div>
+  </div>
+</div>

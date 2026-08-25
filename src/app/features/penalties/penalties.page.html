@@ -1,0 +1,54 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <img src="MARQUISE-AMBIENTAL.jpg" alt="Marquise Ambiental" class="brand-logo" />
+    <div class="header-titles">
+      <h1>Penalidades</h1>
+      <p>Base PENALIDADES-08.xlsm — advertências e suspensões</p>
+    </div>
+    <app-dashboard-nav class="header-nav" />
+  </header>
+
+  @if (loading()) {
+    <div class="dashboard-state">Carregando base de dados…</div>
+  } @else if (error()) {
+    <div class="dashboard-state dashboard-state--error">{{ error() }}</div>
+  } @else if (!hasRecords()) {
+    <div class="dashboard-state">Nenhum dado carregado.</div>
+  } @else {
+    <section class="kpi-row">
+      <app-kpi-card label="Total de penalidades" [value]="(kpis().total | number) ?? '0'" tone="critical" />
+      <app-kpi-card label="Colaboradores penalizados" [value]="(kpis().distinctColaboradores | number) ?? '0'" />
+      <app-kpi-card
+        label="Setor com mais ocorrências"
+        [value]="kpis().topSetor?.key ?? '—'"
+        [hint]="kpis().topSetor ? kpis().topSetor!.count + ' penalidade(s)' : null"
+      />
+      <app-kpi-card
+        label="Gestor com mais ocorrências"
+        [value]="kpis().topGestor?.key ?? '—'"
+        [hint]="kpis().topGestor ? kpis().topGestor!.count + ' penalidade(s)' : null"
+      />
+      <app-kpi-card
+        label="Tipo mais frequente"
+        [value]="kpis().topTipo?.key ?? '—'"
+        [hint]="kpis().topTipo ? kpis().topTipo!.pct.toFixed(0) + '% do total' : null"
+      />
+      <app-kpi-card
+        label="Motivo mais frequente"
+        [value]="kpis().topMotivo?.key ?? '—'"
+        [hint]="kpis().topMotivo ? kpis().topMotivo!.count + ' ocorrência(s)' : null"
+      />
+    </section>
+
+    <app-penalty-filters-bar />
+
+    <section class="chart-grid">
+      <app-penalty-setor-chart />
+      <app-penalty-gestor-chart />
+      <app-penalty-tipo-chart />
+      <app-penalty-turno-chart />
+      <app-penalty-motivo-chart />
+      <app-penalty-evolution-chart />
+    </section>
+  }
+</div>

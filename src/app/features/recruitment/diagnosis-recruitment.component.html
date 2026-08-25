@@ -1,0 +1,95 @@
+<app-chart-card title="Análise de desempenho do RH" subtitle="Calculado a partir da base atual" span="full">
+  <ul class="insight-list">
+    @if (diagnostics().bestMonth) {
+      <li>
+        Mês com mais vagas fechadas: <strong>{{ diagnostics().bestMonth?.monthLabel }}</strong>
+        ({{ diagnostics().bestMonth?.fechadas }} vagas).
+      </li>
+    }
+    @if (diagnostics().worstMonth) {
+      <li>
+        Mês com menos vagas fechadas: <strong>{{ diagnostics().worstMonth?.monthLabel }}</strong>
+        ({{ diagnostics().worstMonth?.fechadas }} vaga(s)).
+      </li>
+    }
+    @if (diagnostics().bestHireMonth) {
+      <li>
+        Mês com mais contratações: <strong>{{ diagnostics().bestHireMonth?.monthLabel }}</strong>
+        ({{ diagnostics().bestHireMonth?.contratados }} pessoa(s)).
+      </li>
+    }
+    <li>
+      Cumprimento geral de SLA: <strong>{{ kpis().pctDentroSLA.toFixed(1) }}%</strong> das vagas fechadas com datas
+      consistentes.
+    </li>
+    <li>
+      Tempo médio de fechamento: <strong>{{ kpis().tempoMedioFechamentoDiasUteis.toFixed(1) }} dias úteis</strong>.
+    </li>
+    @for (t of byTipo(); track t.tipo) {
+      @if (t.totalFechadas > 0) {
+        <li>
+          {{ t.label }}: tempo médio de <strong>{{ t.tempoMedioDiasUteis.toFixed(1) }} dias úteis</strong>,
+          {{ t.pctDentroSLA.toFixed(1) }}% dentro do SLA ({{ t.totalFechadas }} fechada(s)).
+        </li>
+      }
+    }
+    @if (diagnostics().pressureMonth) {
+      <li>
+        Período de maior concentração de vagas recebidas: <strong>{{ diagnostics().pressureMonth?.monthLabel }}</strong>
+        ({{ diagnostics().pressureMonth?.count }} vaga(s) recebidas).
+      </li>
+    }
+    <li>
+      <strong>{{ kpis().vagasAbertasAcimaSLA }}</strong> de {{ kpis().totalAbertas }} vaga(s) em aberto já
+      ultrapassaram o SLA do seu tipo.
+    </li>
+  </ul>
+</app-chart-card>
+
+<app-chart-card title="Diagnóstico gerencial" subtitle="Leitura qualitativa a partir dos indicadores acima" span="full">
+  <ul class="insight-list">
+    <li>
+      <strong>Cumprimento de prazos:</strong> o RH está
+      <strong [attr.data-tone]="slaVerdict().tone">{{ slaVerdict().label }}</strong>
+      quanto ao SLA, com {{ kpis().pctDentroSLA.toFixed(1) }}% das vagas fechadas dentro do prazo definido por tipo.
+    </li>
+    @if (diagnostics().hardestTipo && hasMeaningfulTipoGap()) {
+      <li>
+        <strong>Maior dificuldade de fechamento:</strong> vagas do tipo
+        <strong>{{ diagnostics().hardestTipo?.label }}</strong>, com
+        {{ diagnostics().hardestTipo?.pctDentroSLA.toFixed(1) }}% dentro do SLA — abaixo dos demais tipos com volume.
+      </li>
+    } @else if (diagnostics().hardestTipo) {
+      <li>
+        <strong>Maior dificuldade de fechamento:</strong> sem diferença relevante entre os tipos com volume — todos
+        acima de {{ diagnostics().hardestTipo?.pctDentroSLA.toFixed(0) }}% dentro do SLA.
+      </li>
+    }
+    @if (diagnostics().pressureMonth) {
+      <li>
+        <strong>Pressão sobre o recrutamento:</strong> maior volume de solicitações em
+        <strong>{{ diagnostics().pressureMonth?.monthLabel }}</strong>.
+      </li>
+    }
+    <li>
+      <strong>Acúmulo de vagas em aberto:</strong>
+      @if (backlogVerdict() === null) {
+        não há vagas em aberto no momento.
+      } @else if (backlogVerdict()! > 0) {
+        sim — {{ kpis().vagasAbertasAcimaSLA }} de {{ kpis().totalAbertas }}
+        ({{ (backlogVerdict()! * 100).toFixed(0) }}%) das vagas abertas já estão acima do SLA.
+      } @else {
+        não há indício de acúmulo — todas as vagas em aberto seguem dentro do SLA até o momento.
+      }
+    </li>
+    <li>
+      <strong>Pontos de atenção:</strong> confirmar se as vagas "congeladas" devem voltar ao fluxo ativo ou ser
+      formalmente canceladas.
+    </li>
+    <li>
+      <strong>Ações sugeridas:</strong> priorizar o tipo de vaga com menor % de SLA, revisar a triagem/agenda de
+      entrevistas nos meses de maior concentração de recebimento, e formalizar o fechamento (cancelamento ou
+      reabertura) das vagas congeladas para não distorcer o indicador de "vagas em aberto".
+    </li>
+  </ul>
+</app-chart-card>

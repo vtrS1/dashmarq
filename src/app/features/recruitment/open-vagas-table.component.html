@@ -1,0 +1,46 @@
+<app-chart-card
+  title="Vagas em aberto"
+  [subtitle]="'Ordenado por tempo aberto — ' + openVagas().length + ' vaga(s)'"
+  span="full"
+>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Cargo</th>
+          <th>Setor</th>
+          <th>Tipo</th>
+          <th>Dias úteis aberta</th>
+          <th>SLA</th>
+          <th>Situação</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (v of openVagas(); track v.id) {
+          <tr>
+            <td>{{ v.cargo }}</td>
+            <td>{{ v.setor }}</td>
+            <td>{{ v.tipoLabel }}</td>
+            <td>{{ v.diasUteis | number }}</td>
+            <td>{{ v.slaDiasUteis ?? '—' }}</td>
+            <td>
+              @if (v.isFrozen) {
+                <span class="tag tag-frozen">Congelada</span>
+              } @else if (v.acimaSLA === true) {
+                <span class="tag tag-over">Acima do SLA</span>
+              } @else if (v.acimaSLA === false) {
+                <span class="tag tag-ok">Dentro do SLA</span>
+              } @else {
+                <span class="tag">—</span>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-row">Nenhuma vaga em aberto no momento.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-chart-card>

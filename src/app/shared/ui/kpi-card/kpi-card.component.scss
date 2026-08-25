@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  height: 100%;
+  min-height: 5.25rem;
+  padding: 0.75rem 0.875rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  min-width: 0;
+  box-sizing: border-box;
+
+  &[data-tone='good'] .kpi-value {
+    color: var(--status-good);
+  }
+  &[data-tone='warning'] .kpi-value {
+    color: var(--status-warning);
+  }
+  &[data-tone='critical'] .kpi-value {
+    color: var(--status-critical);
+  }
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.kpi-value {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.kpi-hint {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}

@@ -1,0 +1,83 @@
+<app-chart-card title="Leitura do motivo de desligamento" subtitle="Iniciativa da empresa x iniciativa do colaborador" span="full">
+  <ul class="insight-list">
+    <li>
+      <strong>{{ employerInitiatedPct().toFixed(1) }}%</strong> dos desligamentos são por iniciativa da
+      <strong>empresa</strong> (com ou sem justa causa) — contra
+      <strong>{{ employeeInitiatedPct().toFixed(1) }}%</strong> por pedido de demissão do próprio colaborador.
+      @if (employerInitiatedPct() > employeeInitiatedPct()) {
+        A maior parte das saídas não é voluntária: é a empresa quem está encerrando o vínculo.
+      } @else {
+        A maior parte das saídas é voluntária: o colaborador é quem pede demissão.
+      }
+    </li>
+    @if (topReason()) {
+      <li>
+        Motivo isolado mais frequente: <strong>{{ topReason()?.label }}</strong>
+        ({{ topReason()?.pct?.toFixed(1) }}% das saídas).
+        @if (secondReason()) {
+          Em seguida, <strong>{{ secondReason()?.label }}</strong> ({{ secondReason()?.pct?.toFixed(1) }}%).
+        }
+      </li>
+    }
+    <li>
+      Término de contrato (código "T") responde por
+      <strong>{{ kpis().contractTerminationPct.toFixed(1) }}%</strong> de todas as saídas — desligamentos formais de
+      fim de contrato, não decisão espontânea de nenhuma das partes no dia a dia.
+    </li>
+  </ul>
+</app-chart-card>
+
+<app-chart-card title="Diagnóstico objetivo" subtitle="Calculado a partir da base atual (com os filtros ativos)" span="full">
+  <ul class="insight-list">
+    @if (byGender().length) {
+      <li>
+        Quem mais sai: <strong>{{ byGender()[0].key }}</strong> ({{ byGender()[0].dismissed }} desligamentos)
+        @if (topRole()) {
+          , concentrados no cargo de <strong>{{ topRole()?.key }}</strong>.
+        }
+      </li>
+    }
+    @if (topAgeGroupByVolume()) {
+      <li>
+        Faixa etária que mais sai em volume: <strong>{{ topAgeGroupByVolume()?.key }}</strong>
+        ({{ topAgeGroupByVolume()?.dismissed }} desligamentos).
+      </li>
+    }
+    @if (topAgeGroupByRate()) {
+      <li>
+        Faixa etária com maior taxa de rotatividade: <strong>{{ topAgeGroupByRate()?.key }}</strong>
+        ({{ topAgeGroupByRate()?.turnoverRate?.toFixed(1) }}%).
+      </li>
+    }
+    <li>
+      Tempo até a saída: mediana de <strong>{{ kpis().medianTenureDays.toFixed(0) }} dias</strong> — mas
+      <strong>{{ kpis().dismissedUnder90DaysPct.toFixed(1) }}%</strong> de todas as saídas ocorrem em até 90 dias
+      (período de experiência).
+    </li>
+    @if (topRole()) {
+      <li>
+        Função com maior volume de saídas: <strong>{{ topRole()?.key }}</strong>
+        ({{ topRole()?.dismissed }} desligamentos, {{ topRole()?.turnoverRate?.toFixed(1) }}% de turnover na função).
+      </li>
+    }
+    @if (topUnit()) {
+      <li>
+        Unidade com maior volume de saídas: <strong>{{ topUnit()?.key }}</strong>
+        ({{ topUnit()?.dismissed }} desligamentos, {{ topUnit()?.turnoverRate?.toFixed(1) }}% de turnover na unidade).
+      </li>
+    }
+    @if (topShiftByRate()) {
+      <li>
+        Turno com maior taxa de rotatividade: <strong>{{ topShiftByRate()?.key }}</strong>
+        ({{ topShiftByRate()?.turnoverRate?.toFixed(1) }}%).
+      </li>
+    }
+    @if (buckets().length === 3) {
+      <li>
+        Janela crítica: <strong>{{ buckets()[1].label }}</strong> concentra
+        {{ buckets()[1].count }} desligamentos ({{ buckets()[1].pct.toFixed(1) }}%), contra
+        {{ buckets()[0].count }} ({{ buckets()[0].pct.toFixed(1) }}%) em {{ buckets()[0].label }}.
+      </li>
+    }
+  </ul>
+</app-chart-card>

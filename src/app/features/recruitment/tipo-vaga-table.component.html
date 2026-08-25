@@ -1,0 +1,26 @@
+<app-chart-card title="Desempenho por tipo de vaga" subtitle="SLA fixo: Operacional 15 · Estratégica 30 · Manutenção 30 (dias úteis)">
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Fechadas</th>
+          <th>Abertas</th>
+          <th>Tempo médio (dias úteis)</th>
+          <th>% dentro do SLA</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of byTipo(); track t.tipo) {
+          <tr [class.empty-row]="t.totalFechadas === 0 && t.totalAbertas === 0">
+            <td>{{ t.label }}</td>
+            <td>{{ t.totalFechadas | number }}</td>
+            <td>{{ t.totalAbertas | number }}</td>
+            <td>{{ t.totalFechadas ? (t.tempoMedioDiasUteis | number: '1.0-1') : '—' }}</td>
+            <td>{{ t.totalFechadas ? (t.pctDentroSLA | number: '1.0-1') + '%' : '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-chart-card>

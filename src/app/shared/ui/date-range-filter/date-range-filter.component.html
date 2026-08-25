@@ -1,0 +1,25 @@
+<div class="date-range">
+  <span class="dr-label">{{ label() }}</span>
+  <div class="dr-inputs">
+    <input
+      type="date"
+      class="dr-input"
+      [value]="fromValue()"
+      [min]="minValue()"
+      [max]="toValue() || maxValue()"
+      (change)="onFromChange($any($event.target).value)"
+    />
+    <span class="dr-sep">até</span>
+    <input
+      type="date"
+      class="dr-input"
+      [value]="toValue()"
+      [min]="fromValue() || minValue()"
+      [max]="maxValue()"
+      (change)="onToChange($any($event.target).value)"
+    />
+    @if (range()) {
+      <button type="button" class="dr-clear" (click)="clear()" aria-label="Limpar período">✕</button>
+    }
+  </div>
+</div>
