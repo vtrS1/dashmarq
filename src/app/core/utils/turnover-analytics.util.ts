@@ -5,7 +5,6 @@ import {
   EmployeeRecord,
   FilterState,
   GroupTurnover,
-  ShiftType,
   TenureWindow,
   TurnoverKPIs,
 } from '../models/turnover.model';
@@ -15,12 +14,9 @@ export function applyFilters(records: EmployeeRecord[], filters: FilterState): E
     if (filters.ageGroups.length && !filters.ageGroups.includes(r.ageGroup)) return false;
     if (filters.roles.length && !filters.roles.includes(r.role)) return false;
     if (filters.units.length && !filters.units.includes(r.unit)) return false;
-    if (filters.shifts.length && !filters.shifts.includes(r.shift)) return false;
     if (filters.reasons.length && (!r.dismissalReason || !filters.reasons.includes(r.dismissalReason))) {
       return false;
     }
-    if (filters.maritalStatuses.length && !filters.maritalStatuses.includes(r.maritalStatus)) return false;
-    if (filters.educationLevels.length && !filters.educationLevels.includes(r.educationLevel)) return false;
     if (filters.tenureRangeDays && r.tenureDays != null) {
       const [min, max] = filters.tenureRangeDays;
       if (r.tenureDays < min || r.tenureDays > max) return false;
@@ -90,22 +86,8 @@ export function turnoverByAgeGroup(records: EmployeeRecord[]): GroupTurnover[] {
   );
 }
 
-export function turnoverByShift(records: EmployeeRecord[]): GroupTurnover[] {
-  return groupTurnoverBy(records, (r) => r.shift).sort((a, b) => b.total - a.total);
-}
-
 export function turnoverByGender(records: EmployeeRecord[]): GroupTurnover[] {
   return groupTurnoverBy(records, (r) => r.gender).sort((a, b) => b.dismissed - a.dismissed);
-}
-
-export function turnoverByMaritalStatus(records: EmployeeRecord[]): GroupTurnover[] {
-  return groupTurnoverBy(records, (r) => r.maritalStatus).sort((a, b) => b.total - a.total);
-}
-
-export function turnoverByEducationLevel(records: EmployeeRecord[], topN = 8): GroupTurnover[] {
-  return groupTurnoverBy(records, (r) => r.educationLevel)
-    .sort((a, b) => b.total - a.total)
-    .slice(0, topN);
 }
 
 export function turnoverByRole(records: EmployeeRecord[], topN = 8): GroupTurnover[] {
@@ -216,8 +198,4 @@ export function contractTerminationConcentration(records: EmployeeRecord[]): {
   const near45 = countAt(44) + countAt(45);
   const near90 = countAt(89) + countAt(90);
   return { total, points, near45, near90 };
-}
-
-export function shiftLabel(shift: ShiftType): string {
-  return shift === 'Outro' ? 'Não informado' : shift;
 }

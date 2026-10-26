@@ -4,7 +4,6 @@ import {
   DismissalReasonCode,
   EmployeeRecord,
   RawEmployeeRow,
-  ShiftType,
 } from '../models/turnover.model';
 import { daysBetween, excelSerialToDate } from './excel-date.util';
 
@@ -37,18 +36,6 @@ export function mapDismissalReason(code: string | null): DismissalReasonCode {
 export function extractDismissalCode(raw: string | null | undefined): string | null {
   if (!raw) return null;
   return raw.split('-')[0].trim() || null;
-}
-
-const SHIFT_MAP: Record<string, ShiftType> = {
-  DIURNO: 'Diurno',
-  NOTURNO: 'Noturno',
-  INTERMEDIARIO: 'Intermediário',
-};
-
-/** §1.2 — Turno já vem pronto na coluna `TURNO` (não precisa mais derivar do horário). */
-export function mapShift(raw: string | null | undefined): ShiftType {
-  if (!raw) return 'Outro';
-  return SHIFT_MAP[raw.trim().toUpperCase()] ?? 'Outro';
 }
 
 export function mapAgeGroup(age: number): AgeGroup {
@@ -90,9 +77,6 @@ export function mapRawRowToEmployee(row: RawEmployeeRow, index: number): Employe
     age: row.IDADE,
     ageGroup: mapAgeGroup(row.IDADE),
     gender: normalizeText(row.SEXO),
-    shift: mapShift(row.TURNO),
-    maritalStatus: normalizeText(row.ESTADOCIVIL),
-    educationLevel: normalizeText(row.GRAUINSTRUCAO),
     tenureDays,
     rawDismissalCode,
     dismissalCode,

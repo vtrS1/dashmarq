@@ -66,12 +66,6 @@
         ({{ topUnit()?.dismissed }} desligamentos, {{ topUnit()?.turnoverRate?.toFixed(1) }}% de turnover na unidade).
       </li>
     }
-    @if (topShiftByRate()) {
-      <li>
-        Turno com maior taxa de rotatividade: <strong>{{ topShiftByRate()?.key }}</strong>
-        ({{ topShiftByRate()?.turnoverRate?.toFixed(1) }}%).
-      </li>
-    }
     @if (buckets().length === 3) {
       <li>
         Janela crítica: <strong>{{ buckets()[1].label }}</strong> concentra

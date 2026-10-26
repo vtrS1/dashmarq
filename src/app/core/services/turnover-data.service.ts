@@ -7,8 +7,40 @@ import { applyFilters, computeKPIs } from '../utils/turnover-analytics.util';
 import { mapRawRowsToEmployees } from '../utils/turnover-mapper.util';
 
 const DATA_URL = 'data/novoturnover.xlsx';
-/** A 1ª linha física da planilha está em branco; o cabeçalho real é a 2ª linha. */
-const HEADER_ROW_OFFSET = 1;
+/** Dados começam na 2ª linha física (índice 1); a 1ª é o cabeçalho. */
+const DATA_START_ROW = 1;
+
+/**
+ * Cabeçalho posicional: a célula A1 está mesclada com B1/C1 sob o rótulo
+ * "Chapa", então o XLSX só expõe o texto do cabeçalho na coluna A — as
+ * colunas B e C ficam sem nome e o parser por nome de coluna do SheetJS não
+ * encontra os dados (que começam de fato na coluna C). Por isso o layout é
+ * mapeado por posição em vez de usar a 1ª linha da planilha como cabeçalho.
+ */
+const COLUMN_HEADERS = [
+  '_IGNORE_A',
+  '_IGNORE_B',
+  'CHAPA',
+  'FUNCIONARIO',
+  'DATAADMISSAO',
+  'DATADEMISSAO',
+  '_IGNORE_SITUACAO_CODE',
+  'SITUACAO',
+  'FUNCAO',
+  'SECAO',
+  '_IGNORE_SALARIO',
+  '_IGNORE_SECAO_2',
+  'DESC_HORARIO',
+  '_IGNORE_CPF',
+  '_IGNORE_SECAO_CODIGO',
+  'IDADE',
+  'SEXO',
+  'TIPODEMISSAO',
+  '_IGNORE_HORARIO',
+  '_IGNORE_JORNADA',
+  '_IGNORE_CARGO',
+  'DTNASCIMENTO',
+] as const;
 
 @Injectable({ providedIn: 'root' })
 export class TurnoverDataService {
@@ -34,13 +66,6 @@ export class TurnoverDataService {
   readonly availableUnits = computed(() =>
     [...new Set(this._records().map((r) => r.unit))].sort((a, b) => a.localeCompare(b)),
   );
-  readonly availableMaritalStatuses = computed(() =>
-    [...new Set(this._records().map((r) => r.maritalStatus))].sort((a, b) => a.localeCompare(b)),
-  );
-  readonly availableEducationLevels = computed(() =>
-    [...new Set(this._records().map((r) => r.educationLevel))].sort((a, b) => a.localeCompare(b)),
-  );
-
   readonly dismissalDateBounds = computed<[Date, Date] | null>(() => {
     const dates = this._records()
       .map((r) => r.dismissalDate)
@@ -60,11 +85,12 @@ export class TurnoverDataService {
       .then((buffer) => {
         const workbook = XLSX.read(buffer, { type: 'array', cellDates: false });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json<RawEmployeeRow>(sheet, {
-          range: HEADER_ROW_OFFSET,
+        const rows = XLSX.utils.sheet_to_json(sheet, {
+          header: COLUMN_HEADERS as unknown as string[],
+          range: DATA_START_ROW,
           defval: null,
           raw: true,
-        });
+        }) as unknown as RawEmployeeRow[];
         this._records.set(mapRawRowsToEmployees(rows));
       })
       .catch((err) => {

@@ -26,7 +26,6 @@ export type DismissalReasonCode =
   | 'TERMINO_CONTRATO'
   | 'OUTROS';
 
-export type ShiftType = 'Diurno' | 'Noturno' | 'Intermediário' | 'Outro';
 export type AgeGroup = '18-24 anos' | '25-34 anos' | '35-44 anos' | '45-54 anos' | '55+ anos';
 
 export const AGE_GROUP_ORDER: AgeGroup[] = [
@@ -45,7 +44,16 @@ export const DISMISSAL_REASON_LABELS: Record<DismissalReasonCode, string> = {
   OUTROS: 'Outros Motivos',
 };
 
-/** Raw row shape as it comes out of the RM Labore `novoturnover.xlsx` export. */
+/**
+ * Raw row shape as it comes out of the RM Labore `novoturnover.xlsx` export.
+ *
+ * As of the 2026-10 export, the sheet's header row (A1:C1) is merged under a
+ * single "Chapa" label and columns were renamed/reordered, so the file is
+ * parsed with an explicit positional header (see `COLUMN_HEADERS` in
+ * `turnover-data.service.ts`) instead of the sheet's own header text. That
+ * export also no longer includes TURNO, ESTADOCIVIL or GRAUINSTRUCAO — the
+ * shift/marital-status/education-level breakdowns were removed accordingly.
+ */
 export interface RawEmployeeRow {
   CHAPA: string | null;
   FUNCIONARIO: string | null;
@@ -55,13 +63,10 @@ export interface RawEmployeeRow {
   DESC_HORARIO: string | null;
   SECAO: string | null;
   FUNCAO: string | null;
-  TURNO: string | null;
   TIPODEMISSAO: string | null;
   SEXO: string | null;
-  ESTADOCIVIL: string | null;
   DTNASCIMENTO: number | null;
   IDADE: number | null;
-  GRAUINSTRUCAO: string | null;
 }
 
 export interface EmployeeRecord {
@@ -75,9 +80,6 @@ export interface EmployeeRecord {
   age: number;
   ageGroup: AgeGroup;
   gender: string;
-  shift: ShiftType;
-  maritalStatus: string;
-  educationLevel: string;
   /** Days between admission and dismissal; null while still active. */
   tenureDays: number | null;
   /** Texto original completo da coluna ("2-Inic.Empregador sem justa causa"). */
@@ -108,10 +110,7 @@ export interface FilterState {
   ageGroups: AgeGroup[];
   roles: string[];
   units: string[];
-  shifts: ShiftType[];
   reasons: DismissalReasonCode[];
-  maritalStatuses: string[];
-  educationLevels: string[];
   tenureRangeDays: [number, number] | null;
   /** Restricts to employees dismissed within [from, to] (inclusive). Active employees always pass through. */
   dismissalDateRange: [Date, Date] | null;
@@ -121,10 +120,7 @@ export const EMPTY_FILTER_STATE: FilterState = {
   ageGroups: [],
   roles: [],
   units: [],
-  shifts: [],
   reasons: [],
-  maritalStatuses: [],
-  educationLevels: [],
   tenureRangeDays: null,
   dismissalDateRange: null,
 };

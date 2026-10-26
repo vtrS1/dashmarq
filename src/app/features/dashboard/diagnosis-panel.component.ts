@@ -7,7 +7,6 @@ import {
   turnoverByAgeGroup,
   turnoverByGender,
   turnoverByRole,
-  turnoverByShift,
   turnoverByUnit,
 } from '../../core/utils/turnover-analytics.util';
 
@@ -35,7 +34,6 @@ export class DiagnosisPanelComponent {
   readonly byAgeGroup = computed(() => turnoverByAgeGroup(this.records()));
   readonly byRole = computed(() => turnoverByRole(this.records(), 3));
   readonly byUnit = computed(() => turnoverByUnit(this.records(), 3));
-  readonly byShift = computed(() => turnoverByShift(this.records()).filter((g) => g.total > 0));
   readonly reasons = computed(() => dismissalReasonBreakdown(this.records()));
   readonly buckets = computed(() => tenureBuckets(this.records()));
 
@@ -44,9 +42,6 @@ export class DiagnosisPanelComponent {
   );
   readonly topAgeGroupByRate = computed(() =>
     [...this.byAgeGroup()].filter((g) => g.total > 0).sort((a, b) => b.turnoverRate - a.turnoverRate)[0] ?? null,
-  );
-  readonly topShiftByRate = computed(() =>
-    [...this.byShift()].sort((a, b) => b.turnoverRate - a.turnoverRate)[0] ?? null,
   );
   readonly topRole = computed(() => this.byRole()[0] ?? null);
   readonly topUnit = computed(() => this.byUnit()[0] ?? null);

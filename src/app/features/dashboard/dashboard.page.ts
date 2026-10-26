@@ -10,9 +10,6 @@ import { ContractTerminationChartComponent } from './charts/contract-termination
 import { DismissalReasonChartComponent } from './charts/dismissal-reason-chart.component';
 import { TopRolesChartComponent } from './charts/top-roles-chart.component';
 import { TopUnitsChartComponent } from './charts/top-units-chart.component';
-import { ShiftChartComponent } from './charts/shift-chart.component';
-import { MaritalStatusChartComponent } from './charts/marital-status-chart.component';
-import { EducationChartComponent } from './charts/education-chart.component';
 import { DiagnosisPanelComponent } from './diagnosis-panel.component';
 import { DashboardNavComponent } from '../../shared/ui/dashboard-nav/dashboard-nav.component';
 
@@ -29,9 +26,6 @@ import { DashboardNavComponent } from '../../shared/ui/dashboard-nav/dashboard-n
     DismissalReasonChartComponent,
     TopRolesChartComponent,
     TopUnitsChartComponent,
-    ShiftChartComponent,
-    MaritalStatusChartComponent,
-    EducationChartComponent,
     DiagnosisPanelComponent,
   ],
   templateUrl: './dashboard.page.html',

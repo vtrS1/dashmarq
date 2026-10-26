@@ -7,15 +7,6 @@
       (selectionChange)="onAgeGroupChange($event)"
     />
     <app-chip-toggle-group
-      label="Turno"
-      [options]="shiftOptions"
-      [selected]="filters().shifts"
-      (selectionChange)="onShiftChange($event)"
-    />
-  </div>
-
-  <div class="filters-row">
-    <app-chip-toggle-group
       label="Motivo de desligamento"
       [options]="reasonOptions"
       [selected]="filters().reasons"
@@ -35,18 +26,6 @@
       [options]="availableUnits()"
       [selected]="filters().units"
       (selectionChange)="onUnitChange($event)"
-    />
-    <app-multi-select
-      label="Estado civil"
-      [options]="availableMaritalStatuses()"
-      [selected]="filters().maritalStatuses"
-      (selectionChange)="onMaritalStatusChange($event)"
-    />
-    <app-multi-select
-      label="Grau de instrução"
-      [options]="availableEducationLevels()"
-      [selected]="filters().educationLevels"
-      (selectionChange)="onEducationLevelChange($event)"
     />
     <app-date-range-filter
       label="Período de desligamento"
